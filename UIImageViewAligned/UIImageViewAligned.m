@@ -113,7 +113,7 @@
         realframe.origin.y = CGRectGetMaxY(self.bounds) - realframe.size.height;
     
     _realImageView.frame = realframe;
-
+    
     // Make sure we clear the contents of this container layer, since it refreshes from the image property once in a while.
     self.layer.contents = nil;
 }
@@ -121,18 +121,18 @@
 - (CGSize)realContentSize
 {
     CGSize size = self.bounds.size;
-
+    
     if (self.image == nil)
         return size;
-
+    
     switch (self.contentMode)
     {
         case UIViewContentModeScaleAspectFit:
         {
-            float scalex = self.bounds.size.width / _realImageView.image.size.width;
-            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            float scalex = _realImageView.image.size.width != 0 ? self.bounds.size.width / _realImageView.image.size.width : 1.f;
+            float scaley = _realImageView.image.size.height != 0 ? self.bounds.size.height / _realImageView.image.size.height : 1.f;
             float scale = MIN(scalex, scaley);
-
+            
             if ((scale > 1.0f && !_enableScaleUp) ||
                 (scale < 1.0f && !_enableScaleDown))
                 scale = 1.0f;
@@ -142,7 +142,7 @@
             
         case UIViewContentModeScaleAspectFill: // horizontal fill only
         {
-            float scalex = self.bounds.size.width / _realImageView.image.size.width;
+            float scalex = _realImageView.image.size.width != 0 ? self.bounds.size.width / _realImageView.image.size.width : 1.f;
             float scale = scalex;
             
             if ((scale > 1.0f && !_enableScaleUp) ||
@@ -155,9 +155,9 @@
             
         case UIViewContentModeScaleToFill:
         {
-            float scalex = self.bounds.size.width / _realImageView.image.size.width;
-            float scaley = self.bounds.size.height / _realImageView.image.size.height;
-
+            float scalex = _realImageView.image.size.width != 0 ? self.bounds.size.width / _realImageView.image.size.width : 1.f;
+            float scaley = _realImageView.image.size.height != 0 ? self.bounds.size.height / _realImageView.image.size.height : 1.f;
+            
             if ((scalex > 1.0f && !_enableScaleUp) ||
                 (scalex < 1.0f && !_enableScaleDown))
                 scalex = 1.0f;
@@ -168,12 +168,12 @@
             size = CGSizeMake(_realImageView.image.size.width * scalex, _realImageView.image.size.height * scaley);
             break;
         }
-
+            
         default:
             size = _realImageView.image.size;
             break;
     }
-
+    
     return size;
 }
 
@@ -242,3 +242,4 @@
 
 
 @end
+
