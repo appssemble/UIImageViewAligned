@@ -143,7 +143,8 @@
         case UIViewContentModeScaleAspectFill: // horizontal fill only
         {
             float scalex = _realImageView.image.size.width != 0 ? self.bounds.size.width / _realImageView.image.size.width : 1.f;
-            float scale = scalex;
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            float scale = MAX(scalex, scaley);
             
             if ((scale > 1.0f && !_enableScaleUp) ||
                 (scale < 1.0f && !_enableScaleDown))
